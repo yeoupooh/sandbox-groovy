@@ -1,0 +1,12 @@
+{
+  "commands": [
+    {
+      "name": "cmd1",
+      "command": "ls -la"
+    },
+    {
+      "name": "cmd2",
+      "command": "cat /etc/hosts"
+    }
+  ]
+}
