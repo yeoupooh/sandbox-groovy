@@ -1,0 +1,14 @@
+{
+  "basePath": "/your-servers-root",
+  "serverPaths": [
+    {
+	  "name": "server name",
+	  "port": 25565,
+	  "minecraftVersion": "1.8.4",
+	  "requiredMods": [],
+	  "requiredResourcePacks": [],
+      "script": "/your-script.sh",
+      "server": "/your-server"
+    }
+  ]
+}

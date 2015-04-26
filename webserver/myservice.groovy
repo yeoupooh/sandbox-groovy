@@ -1,3 +1,7 @@
+import groovy.json.*
+
+def json = new JsonBuilder()
+
 response.contentType = 'application/json'
 json.hello {
     "name" "me"
