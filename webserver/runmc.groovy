@@ -29,6 +29,9 @@ if (cmd == "start") {
 //json.result res
 //out << json
 
+def pl = new ProcessList()
+def ps = pl.getCurrent()
+
 html.html {
 	body {
 		p { a(href:"/runmc.groovy", "Home") }
@@ -45,10 +48,11 @@ html.html {
 				} // tr
 			} // thead
 			config.serverPaths.eachWithIndex { server, i ->
+				def status = pl.findCommand(ps, server.server) == true ? "Running" : "Stopped"
 				tr {			
 					td { a(href:"/runmc.groovy?cmd=start&index=" + i, "Start") } // td
 					td { yield "$server.name" }
-					td { yield "(TODO)" }
+					td { yield "$status" }
 					td { yield "$server.minecraftVersion" }
 					td { yield "$server.port" }
 					td { yield "$server.requiredMods" } // td
