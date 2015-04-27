@@ -33,9 +33,12 @@ def pl = new ProcessList()
 def ps = pl.getCurrent()
 
 html.html {
+    head {
+        link (href:"//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css",rel:"stylesheet")
+    }
 	body {
-		p { a(href:"/runmc.groovy", "Home") }
-		table {
+		p { button(class:"button btn btn-primary", href:"location.href='/runmc.groovy'", "Home") }
+		table (class:"table") {
 			thead {
 				tr {
 					td { yield "Actions" }
@@ -50,9 +53,11 @@ html.html {
 			config.serverPaths.eachWithIndex { server, i ->
 				def status = pl.findCommand(ps, server.server) == true ? "Running" : "Stopped"
 				tr {			
-					td { a(href:"/runmc.groovy?cmd=start&index=" + i, "Start") } // td
+					td { button(class:"button btn btn-primary", onclick:"location.href='/runmc.groovy?cmd=start&index=" + i + "'", "Start") } // td
 					td { yield "$server.name" }
-					td { yield "$status" }
+					td { 
+                        span (class: status == true ? "btn btn-success" : "btn btn-danger", "$status")
+                    }
 					td { yield "$server.minecraftVersion" }
 					td { yield "$server.port" }
 					td { yield "$server.requiredMods" } // td

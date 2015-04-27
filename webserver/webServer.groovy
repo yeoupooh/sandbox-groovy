@@ -11,6 +11,7 @@ def startJetty() {
     def context = new Context(jetty, '/', Context.SESSIONS)  // Allow sessions.
     context.resourceBase = '.'  // Look in current dir for Groovy scripts.
     context.addServlet(GroovyServlet, '*.groovy')  // All files ending with .groovy will be served.
+    context.addServlet(GroovyServlet, '*.gtpl') 
     context.setAttribute('version', '1.0')  // Set an context attribute.
     
     jetty.start()
