@@ -37,7 +37,7 @@ html.html {
         link (href:"//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css",rel:"stylesheet")
     }
 	body {
-		p { button(class:"button btn btn-primary", href:"location.href='/runmc.groovy'", "Home") }
+		p { button(class:"button btn btn-primary", onclick:"location.href='/runmc.groovy'", "Home") }
 		table (class:"table") {
 			thead {
 				tr {
@@ -51,12 +51,12 @@ html.html {
 				} // tr
 			} // thead
 			config.serverPaths.eachWithIndex { server, i ->
-				def status = pl.findCommand(ps, server.server) == true ? "Running" : "Stopped"
+				def status = pl.findCommand(ps, server.server)
 				tr {			
 					td { button(class:"button btn btn-primary", onclick:"location.href='/runmc.groovy?cmd=start&index=" + i + "'", "Start") } // td
 					td { yield "$server.name" }
 					td { 
-                        span (class: status == true ? "btn btn-success" : "btn btn-danger", "$status")
+                        span (class: status == true ? "btn btn-success" : "btn btn-danger", status == true ? "Running" : "Stopped")
                     }
 					td { yield "$server.minecraftVersion" }
 					td { yield "$server.port" }
