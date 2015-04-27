@@ -34,6 +34,8 @@ def ps = pl.getCurrent()
 
 html.html {
     head {
+	title ("Minecraft Server Web Launcher") 
+
         link (href:"//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css",rel:"stylesheet")
     }
 	body {
