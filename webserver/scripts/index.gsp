@@ -1,0 +1,6 @@
+hello
+
+<% print 'Welcome!' %>
+
+
+
