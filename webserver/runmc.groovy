@@ -62,7 +62,11 @@ html.html {
                     }
 					td { yield "$server.minecraftVersion" }
 					td { yield "$server.port" }
-					td { yield "$server.requiredMods" } // td
+					td { 
+					server.requiredMods.each { mod ->
+						a(href:mod.url, mod.name)
+					}
+					} // td
 					td { yield "$server.requiredResourcePacks" } // td
 				} // tr
 			} // each
