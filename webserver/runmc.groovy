@@ -1,36 +1,24 @@
 import groovy.io.FileType
-import groovy.json.JsonBuilder
-
-def json = new JsonBuilder()
 
 def startServer = { config, index ->
     def cmd = config.basePath + config.serverPaths[index].script + " " + config.basePath + config.serverPaths[index].server
     // Using ".text" will wait until server is down
     //def res = cmd.execute().text
 
-    //println "cmd=" + cmd
-
     cmd.execute()
     return "OK"
 }
 
-def res = "OK"
-
 def config = new ServerConfig().load()
-//println config
 
 def cmd = request.getParameter("cmd")
-//println cmd
 
 if (cmd == "start") {
     startServer(config, request.getParameter("index").toInteger())
+    redirect("/runmc.groovy")
 }
 
-//response.contentType = 'application/json'
-//json.result res
-//out << json
-
-def pl = new ProcessList()
+ProcessList pl = new ProcessList()
 def ps = pl.getCurrent()
 
 html.html {
@@ -45,12 +33,12 @@ html.html {
             thead {
                 tr {
                     td { yield "Actions" }
-                    td { yield "Server Name" }
                     td { yield "Status" }
-                    td { yield "Minecraft Version" }
+                    td { yield "Server Name" }
                     td { yield "Port#" }
+                    td { yield "Server Description" }
+                    td { yield "Minecraft Version" }
                     td { yield "Installed Mods" }
-//                    td { yield "Required Mods" }
                     td { yield "Required Resource Packs" }
                 } // tr
             } // thead
@@ -60,32 +48,28 @@ html.html {
                     td {
                         button(class: "button btn btn-primary", onclick: "location.href='/runmc.groovy?cmd=start&index=" + i + "'", "Start")
                     } // td
-                    td { yield "$server.name" }
                     td {
                         span(class: status == true ? "btn btn-success" : "btn btn-danger", status == true ? "Running" : "Stopped")
                     }
-                    td { yield "$server.minecraftVersion" }
+                    td { yield "$server.name" }
                     td { yield "$server.port" }
+                    td { yield "$server.description" }
+                    td { yield "$server.minecraftVersion" }
                     td {
-						try {
-						def list = []
-						def dir = new File(config.basePath + server.server + "/mods")
-						dir.eachFile(FileType.FILES) { file->
-							p{
-							a(href:config.download.baseUrl + file.getName(),file.getName())
-							}
-						}
-						}catch (FileNotFoundException e) {
-						}
+                        try {
+                            File dir = new File(config.basePath.toString() + server.server.toString() + "/mods")
+                            dir.eachFile(FileType.FILES) { file ->
+                                p {
+                                    a(href: config.download.baseUrl + file.getName(), file.getName())
+                                }
+                            }
+                        } catch (FileNotFoundException) {
+                            // ignore this error
+                        }
                     } // td
-//                    td {
-//                        server.requiredMods.each { mod ->
-//                            a(href: mod.url, mod.name)
-//                        }
-//                    } // td
                     td {
                         server.requiredResourcePacks.each { rp ->
-                            a(href: rp.url, rp.name)
+                            a(href: config.download.baseUrl + rp.name, rp.name)
                         }
                     } // td
                 } // tr
