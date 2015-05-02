@@ -1,16 +1,16 @@
-import groovy.json.*
+import groovy.json.JsonBuilder
 
 def json = new JsonBuilder()
 
 def startServer = { config, index ->
-	def cmd = config.basePath + config.serverPaths[index].script + " " + config.basePath + config.serverPaths[index].server
-	// Using ".text" will wait until server is down
-	//def res = cmd.execute().text
-	
-	//println "cmd=" + cmd
-	
-	cmd.execute()
-	return "OK"
+    def cmd = config.basePath + config.serverPaths[index].script + " " + config.basePath + config.serverPaths[index].server
+    // Using ".text" will wait until server is down
+    //def res = cmd.execute().text
+
+    //println "cmd=" + cmd
+
+    cmd.execute()
+    return "OK"
 }
 
 def res = "OK"
@@ -22,7 +22,7 @@ def cmd = request.getParameter("cmd")
 //println cmd
 
 if (cmd == "start") {
-	startServer(config, request.getParameter("index").toInteger())
+    startServer(config, request.getParameter("index").toInteger())
 }
 
 //response.contentType = 'application/json'
@@ -34,42 +34,44 @@ def ps = pl.getCurrent()
 
 html.html {
     head {
-	title ("Minecraft Server Web Launcher") 
+        title("Minecraft Server Web Launcher")
 
-        link (href:"//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css",rel:"stylesheet")
+        link(href: "//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css", rel: "stylesheet")
     }
-	body {
-		p { button(class:"button btn btn-primary", onclick:"location.href='/runmc.groovy'", "Home") }
-		table (class:"table") {
-			thead {
-				tr {
-					td { yield "Actions" }
-					td { yield "Server Name" }
-					td { yield "Status" }
-					td { yield "Minecraft Version" }
-					td { yield "Port#" }
-					td { yield "Required Mods" }
-					td { yield "Required Resource Packs" }
-				} // tr
-			} // thead
-			config.serverPaths.eachWithIndex { server, i ->
-				def status = pl.findCommand(ps, server.server)
-				tr {			
-					td { button(class:"button btn btn-primary", onclick:"location.href='/runmc.groovy?cmd=start&index=" + i + "'", "Start") } // td
-					td { yield "$server.name" }
-					td { 
-                        span (class: status == true ? "btn btn-success" : "btn btn-danger", status == true ? "Running" : "Stopped")
+    body {
+        p { button(class: "button btn btn-primary", onclick: "location.href='/runmc.groovy'", "Home") }
+        table(class: "table") {
+            thead {
+                tr {
+                    td { yield "Actions" }
+                    td { yield "Server Name" }
+                    td { yield "Status" }
+                    td { yield "Minecraft Version" }
+                    td { yield "Port#" }
+                    td { yield "Required Mods" }
+                    td { yield "Required Resource Packs" }
+                } // tr
+            } // thead
+            config.serverPaths.eachWithIndex { server, i ->
+                def status = pl.findCommand(ps, server.server)
+                tr {
+                    td {
+                        button(class: "button btn btn-primary", onclick: "location.href='/runmc.groovy?cmd=start&index=" + i + "'", "Start")
+                    } // td
+                    td { yield "$server.name" }
+                    td {
+                        span(class: status == true ? "btn btn-success" : "btn btn-danger", status == true ? "Running" : "Stopped")
                     }
-					td { yield "$server.minecraftVersion" }
-					td { yield "$server.port" }
-					td { 
-					server.requiredMods.each { mod ->
-						a(href:mod.url, mod.name)
-					}
-					} // td
-					td { yield "$server.requiredResourcePacks" } // td
-				} // tr
-			} // each
-		} // table
-	} // body
+                    td { yield "$server.minecraftVersion" }
+                    td { yield "$server.port" }
+                    td {
+                        server.requiredMods.each { mod ->
+                            a(href: mod.url, mod.name)
+                        }
+                    } // td
+                    td { yield "$server.requiredResourcePacks" } // td
+                } // tr
+            } // each
+        } // table
+    } // body
 } // html
