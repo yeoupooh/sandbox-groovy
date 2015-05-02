@@ -69,7 +69,11 @@ html.html {
                             a(href: mod.url, mod.name)
                         }
                     } // td
-                    td { yield "$server.requiredResourcePacks" } // td
+                    td {
+                        server.requiredResourcePacks.each { rp ->
+                            a(href: rp.url, rp.name)
+                        }
+                    } // td
                 } // tr
             } // each
         } // table
