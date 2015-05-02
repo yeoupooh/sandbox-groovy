@@ -1,7 +1,7 @@
 import groovy.json.JsonSlurper
 
 def load() {
-	def inputFile = new File("server.config.json")
+	def inputFile = new File("conf/server.config.json")
 	def InputJSON = new JsonSlurper().parseText(inputFile.text)
 	//InputJSON.each{ println it }
 

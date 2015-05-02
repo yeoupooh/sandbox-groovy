@@ -15,7 +15,7 @@ def cmd = request.getParameter("cmd")
 
 if (cmd == "start") {
     startServer(config, request.getParameter("index").toInteger())
-    redirect("/runmc.groovy")
+    redirect("/scripts/runmc.groovy")
 }
 
 ProcessList pl = new ProcessList()
@@ -46,7 +46,7 @@ html.html {
                 def status = pl.findCommand(ps, server.server)
                 tr {
                     td {
-                        button(class: "button btn btn-primary", onclick: "location.href='/runmc.groovy?cmd=start&index=" + i + "'", "Start")
+                        button(class: "button btn btn-primary", onclick: "location.href='/scripts/runmc.groovy?cmd=start&index=" + i + "'", "Start")
                     } // td
                     td {
                         span(class: status == true ? "btn btn-success" : "btn btn-danger", status == true ? "Running" : "Stopped")

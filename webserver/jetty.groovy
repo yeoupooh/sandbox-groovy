@@ -1,3 +1,5 @@
+#!/usr/bin/env groovy
+
 import groovy.servlet.GroovyServlet
 import groovy.servlet.TemplateServlet
 import org.eclipse.jetty.server.*
@@ -46,7 +48,7 @@ class HelloHandler extends AbstractHandler {
 }
 
 def runServer() {
-    Server server = new Server(8080)
+    Server server = new Server(9090)
 
     ContextHandlerCollection contexts = new ContextHandlerCollection();
     server.setHandler(contexts);
