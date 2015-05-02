@@ -11,11 +11,13 @@ def startServer = { config, index ->
 
 def config = new ServerConfig().load()
 
+def thisScript = "/runmc.groovy"
+
 def cmd = request.getParameter("cmd")
 
 if (cmd == "start") {
     startServer(config, request.getParameter("index").toInteger())
-    redirect("/scripts/runmc.groovy")
+    redirect(thisScript)
 }
 
 ProcessList pl = new ProcessList()
@@ -28,7 +30,7 @@ html.html {
         link(href: "//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css", rel: "stylesheet")
     }
     body {
-        p { button(class: "button btn btn-primary", onclick: "location.href='/runmc.groovy'", "Home") }
+        p { button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "'", "Home") }
         table(class: "table") {
             thead {
                 tr {
@@ -46,7 +48,7 @@ html.html {
                 def status = pl.findCommand(ps, server.server)
                 tr {
                     td {
-                        button(class: "button btn btn-primary", onclick: "location.href='/scripts/runmc.groovy?cmd=start&index=" + i + "'", "Start")
+                        button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=start&index=" + i + "'", "Start")
                     } // td
                     td {
                         span(class: status == true ? "btn btn-success" : "btn btn-danger", status == true ? "Running" : "Stopped")

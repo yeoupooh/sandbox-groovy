@@ -62,17 +62,17 @@ def runServer() {
     ContextHandler contextStatic = new ContextHandler(contexts, "/static");
     contextStatic.setHandler(resourceHandler);
 
-    ServletContextHandler contextScripts = new ServletContextHandler(contexts, "/scripts", ServletContextHandler.SESSIONS);
+    ServletContextHandler contextScripts = new ServletContextHandler(contexts, "/", ServletContextHandler.SESSIONS);
     contextScripts.with {
-        resourceBase = "scripts"
+        resourceBase = "."
+        addServlet(GroovyServlet, '*.groovy')  // All files ending with .groovy will be served.
         addServlet(TemplateServlet, "*.gsp")
         addServlet(GroovyServlet, '*.gtpl')
-        addServlet(GroovyServlet, '*.groovy')  // All files ending with .groovy will be served.
     }
 
-    ContextHandler contextRoot = new ContextHandler(contexts, "/")
-    contextRoot.setContextPath("/");
-    contextRoot.setHandler(new HelloHandler("Root Hello"));
+//    ContextHandler contextRoot = new ContextHandler(contexts, "/")
+//    contextRoot.setContextPath("/");
+//    contextRoot.setHandler(new HelloHandler("Root Hello"));
 
     ContextHandler contextFR = new ContextHandler(contexts, "/fr");
     contextFR.setHandler(new HelloHandler("Bonjoir"));
