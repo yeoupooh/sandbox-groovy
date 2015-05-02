@@ -1,3 +1,4 @@
+import groovy.io.FileType
 import groovy.json.JsonBuilder
 
 def json = new JsonBuilder()
@@ -48,7 +49,8 @@ html.html {
                     td { yield "Status" }
                     td { yield "Minecraft Version" }
                     td { yield "Port#" }
-                    td { yield "Required Mods" }
+                    td { yield "Installed Mods" }
+//                    td { yield "Required Mods" }
                     td { yield "Required Resource Packs" }
                 } // tr
             } // thead
@@ -65,10 +67,22 @@ html.html {
                     td { yield "$server.minecraftVersion" }
                     td { yield "$server.port" }
                     td {
-                        server.requiredMods.each { mod ->
-                            a(href: mod.url, mod.name)
-                        }
+						try {
+						def list = []
+						def dir = new File(config.basePath + server.server + "/mods")
+						dir.eachFile(FileType.FILES) { file->
+							p{
+							a(href:config.download.baseUrl + file.getName(),file.getName())
+							}
+						}
+						}catch (FileNotFoundException e) {
+						}
                     } // td
+//                    td {
+//                        server.requiredMods.each { mod ->
+//                            a(href: mod.url, mod.name)
+//                        }
+//                    } // td
                     td {
                         server.requiredResourcePacks.each { rp ->
                             a(href: rp.url, rp.name)
