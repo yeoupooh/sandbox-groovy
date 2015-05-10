@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="libs">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/jfreechart/libs/itext-2.0.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jfreechart/libs/jfreechart-1.0.5.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jfreechart/libs/swtgraphics2d.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jfreechart/libs/jcommon-1.0.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jfreechart/libs/jfreechart-1.0.5-experimental.jar!/" />
+      <root url="jar://$PROJECT_DIR$/jfreechart/libs/gnujaxp.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
