@@ -13,10 +13,32 @@ def config = new ServerConfig().load()
 
 def thisScript = "/runmc.groovy"
 
+if (!session) {
+    session = request.getSession(true)
+}
+
+if (session.admin == null) {
+    session.admin = false
+}
+
 def cmd = request.getParameter("cmd")
 
 if (cmd == "start") {
     startServer(config, request.getParameter("index").toInteger())
+    redirect(thisScript)
+}
+
+if (cmd == "login") {
+    if (request.getParameter("username") == config.auth.username
+            && request.getParameter("password") == config.auth.password) {
+        session.admin = true
+        session.username = config.auth.username
+    }
+    redirect(thisScript)
+}
+
+if (cmd == "logout") {
+    session.admin = null
     redirect(thisScript)
 }
 
@@ -30,7 +52,32 @@ html.html {
         link(href: "//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css", rel: "stylesheet")
     }
     body {
-        p { button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "'", "Home") }
+        table {
+            tr {
+                td {
+                    a(class: "button btn btn-primary", href: thisScript, "Home")
+                }
+            }
+            tr {
+                td {
+                    if (session.admin == true) {
+                        yield "Welcome, ${session.username}!"
+                        a(class: "button btn btn-primary", href: thisScript + "?cmd=logout", "Logout")
+                    } else {
+                        form(role: "form", class: "form-inline", name: "loginForm", method: "POST", action: thisScript) {
+                            input(type: "hidden", name: "cmd", value: "login")
+                            div(class: "form-group") {
+                                input(class: "form-control", type: "text", name: "username", placeholder: "Enter username")
+                            }
+                            div(class: "form-group") {
+                                input(class: "form-control", type: "password", name: "password", placeholder: "Enter password")
+                            }
+                            button(class: "button btn btn-primary", onclick: "document.loginForm.submit()", "Login")
+                        }
+                    }
+                }
+            }
+        }
         table(class: "table") {
             thead {
                 tr {
@@ -48,7 +95,11 @@ html.html {
                 def status = pl.findCommand(ps, server.server)
                 tr {
                     td {
-                        button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=start&index=" + i + "'", "Start")
+                        if (session.admin == true) {
+                            button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=start&index=" + i + "'", "Start")
+                        } else {
+                            button(class: "button btn btn-disabled", "Start")
+                        }
                     } // td
                     td {
                         span(class: status == true ? "btn btn-success" : "btn btn-danger", status == true ? "Running" : "Stopped")
