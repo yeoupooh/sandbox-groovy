@@ -88,7 +88,7 @@ html.html {
                     td { yield "Server Description" }
                     td { yield "Minecraft Version" }
                     td { yield "Installed Mods" }
-                    td { yield "Required Resource Packs" }
+                    td { yield "Required Resource Packs/Map files" }
                 } // tr
             } // thead
             config.serverPaths.eachWithIndex { server, i ->
@@ -113,7 +113,7 @@ html.html {
                             File dir = new File(config.basePath.toString() + server.server.toString() + "/mods")
                             dir.eachFile(FileType.FILES) { file ->
                                 p {
-                                    a(href: config.download.baseUrl + file.getName(), file.getName())
+                                    a(class: "glyphicon glyphicon-download", href: config.download.baseUrl + file.getName(), file.getName())
                                 }
                             }
                         } catch (FileNotFoundException) {
@@ -122,7 +122,11 @@ html.html {
                     } // td
                     td {
                         server.requiredResourcePacks.each { rp ->
-                            a(href: config.download.baseUrl + rp.name, rp.name)
+                            p {
+                                a(class: "glyphicon glyphicon-download", href: config.download.baseUrl + rp.name, rp.name)
+                                br {}
+                                a(class: "glyphicon glyphicon-new-window", href: rp.url, target: "_blank", "Source")
+                            }
                         }
                     } // td
                 } // tr
