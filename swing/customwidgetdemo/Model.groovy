@@ -1,5 +1,5 @@
 class Model extends Observable {
-    static CURRENCY = [ "USD", "EURO", "YEN" ]
+    static CURRENCY = ["USD", "EURO", "YEN"]
 
     private Map rates = new HashMap()
     private long value

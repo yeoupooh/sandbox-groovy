@@ -1,25 +1,28 @@
-import groovy.swing.SwingBuilder  
-import groovy.beans.Bindable  
-import static javax.swing.JFrame.EXIT_ON_CLOSE  
+import groovy.beans.Bindable
+import groovy.swing.SwingBuilder
+
 import java.awt.*
- 
+
+import static javax.swing.JFrame.EXIT_ON_CLOSE
+
 @Bindable
-class Address {  
+class Address {
     String street, number, city
+
     String toString() { "address[street=$street,number=$number,city=$city]" }
 }
-  
+
 def address = new Address(street: 'Evergreen Terrace', number: '742', city: 'Springfield')
-  
+
 def swingBuilder = new SwingBuilder()
 swingBuilder.edt {  // edt method makes sure UI is build on Event Dispatch Thread.
     lookAndFeel 'nimbus'  // Simple change in look and feel.
-    frame(title: 'Address', size: [350, 230], 
-            show: true, locationRelativeTo: null, 
-            defaultCloseOperation: EXIT_ON_CLOSE) { 
+    frame(title: 'Address', size: [350, 230],
+            show: true, locationRelativeTo: null,
+            defaultCloseOperation: EXIT_ON_CLOSE) {
         borderLayout(vgap: 5)
-        
-        panel(constraints: BorderLayout.CENTER, 
+
+        panel(constraints: BorderLayout.CENTER,
                 border: compoundBorder([emptyBorder(10), titledBorder('Enter your address:')])) {
             tableLayout {
                 tr {
@@ -47,19 +50,19 @@ swingBuilder.edt {  // edt method makes sure UI is build on Event Dispatch Threa
                     }
                 }
             }
-            
+
         }
-        
+
         panel(constraints: BorderLayout.SOUTH) {
             button text: 'Save', actionPerformed: {
                 println address
             }
         }
-        
+
         // Binding of textfield's to address object.
-        bean address, 
-            street: bind { streetField.text }, 
-            number: bind { numberField.text }, 
-            city: bind { cityField.text }
-    }  
+        bean address,
+                street: bind { streetField.text },
+                number: bind { numberField.text },
+                city: bind { cityField.text }
+    }
 }
