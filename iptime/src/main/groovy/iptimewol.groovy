@@ -1,11 +1,15 @@
+
+
+
 import groovy.json.JsonSlurper
-import groovyx.net.http.*
+import groovyx.net.http.ContentType
+import groovyx.net.http.HTTPBuilder
+import groovyx.net.http.Method
 
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
-import static groovyx.net.http.ContentType.*
-import static groovyx.net.http.Method.*
+import static groovyx.net.http.Method.POST
 
 @Grab(group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.6')
 @Grab(group = 'org.ccil.cowan.tagsoup', module = 'tagsoup', version = '1.2')
