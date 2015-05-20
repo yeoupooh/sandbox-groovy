@@ -80,7 +80,11 @@ public class IptimeClient {
     }
 
     def loadConfig() {
-        configJsons = new JsonSlurper().parseText(this.getClass().getResource('/iptime.config.json').text)
+        def confRes = this.getClass().getResource('/iptime.config.json')
+        if (confRes == null) {
+            return null
+        }
+        configJsons = new JsonSlurper().parseText(confRes.text)
         return configJsons
     }
 
