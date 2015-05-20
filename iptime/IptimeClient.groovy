@@ -1,5 +1,3 @@
-package iptime
-
 import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
@@ -12,6 +10,7 @@ import java.util.regex.Pattern
 import static groovyx.net.http.Method.POST
 
 @Grapes([
+        @Grab(group = 'commons-lang', module = 'commons-lang', version = '2.6'),
         @Grab(group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.7.1'),
         @Grab(group = 'org.ccil.cowan.tagsoup', module = 'tagsoup', version = '1.2.1')
 ])
@@ -31,7 +30,7 @@ public class IptimeClient {
     }
 
     def iptimeLoginHandler = { configJson ->
-        println configJson.baseUrl
+        println "Connecting..." + configJson.baseUrl
         def http = new HTTPBuilder(configJson.baseUrl)
         println "Loading...loginHandler"
         def html;
@@ -81,12 +80,15 @@ public class IptimeClient {
     }
 
     def loadConfig() {
-        configJsons = new JsonSlurper().parseText(this.getClass().getResource('/iptime.config.json').text)
+        def confRes = this.getClass().getResource('/iptime.config.json')
+        if (confRes == null) {
+            return null
+        }
+        configJsons = new JsonSlurper().parseText(confRes.text)
         return configJsons
     }
 
     def getWolList(config) {
-        println "connect"
         def loginHandlerHtml = iptimeLoginHandler(config)
         efmSessionId = parseEfmSessionId(loginHandlerHtml)
         def loginHtml = iptimeLogin(config, efmSessionId)

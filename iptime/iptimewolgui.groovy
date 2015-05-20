@@ -1,5 +1,4 @@
 import groovy.swing.SwingBuilder
-import iptime.IptimeClient
 
 import javax.swing.*
 import java.awt.*
@@ -17,6 +16,13 @@ def loadConfig = {
     //wolModel.add(0, "test")
     //wolModel.add("test")
     configJsons = ic.loadConfig()
+    if (configJsons == null) {
+        swing.optionPane().showMessageDialog(null,
+            "Can't load config file.",
+            "Wakeup On LAN",
+            JOptionPane.ERROR_MESSAGE)
+        return
+    }
     println configJsons
     cmb.clear()
     configJsons.each { config ->
