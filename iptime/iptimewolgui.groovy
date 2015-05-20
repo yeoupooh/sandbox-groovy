@@ -1,5 +1,4 @@
 import groovy.swing.SwingBuilder
-import iptime.IptimeClient
 
 import javax.swing.*
 import java.awt.*
