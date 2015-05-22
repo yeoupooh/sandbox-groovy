@@ -1,3 +1,5 @@
+#!/usr/bin/env groovy
+
 import IptimeClient
 
 IptimeClient ic = new IptimeClient()

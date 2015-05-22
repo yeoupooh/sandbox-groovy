@@ -1,3 +1,5 @@
+#!/usr/bin/env groovy
+
 import groovy.swing.SwingBuilder
 
 import javax.swing.*
@@ -59,7 +61,7 @@ def getWolList = {
 swing = new SwingBuilder();
 frame = swing.frame(title: 'ipTime WOL', defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE,
         size: [400, 200], show: true, locationRelativeTo: null) {
-    lookAndFeel("system")
+    lookAndFeel("nimbus")
     borderLayout()
     panel(constraints: BorderLayout.NORTH) {
         button(label: 'Load config', actionPerformed: {
