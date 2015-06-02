@@ -8,5 +8,155 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="groovy-2.4.3" level="application" />
+    <orderEntry type="module-library">
+      <library name="Grab:redmine-java-api-1.10.0.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/com.googlecode/redmine-java-api/jars/redmine-java-api-1.10.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:httpclient-4.1.2.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/org.apache.httpcomponents/httpclient/jars/httpclient-4.1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.ideaLibSources/httpclient-4.1.2-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:httpcore-4.1.2.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/org.apache.httpcomponents/httpcore/jars/httpcore-4.1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:commons-logging-1.1.1.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/commons-logging/commons-logging/jars/commons-logging-1.1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:commons-codec-1.4.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/commons-codec/commons-codec/jars/commons-codec-1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:json-20090211.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/org.json/json/jars/json-20090211.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:redmine-java-api-2.2.0.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/com.taskadapter/redmine-java-api/jars/redmine-java-api-2.2.0.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.ideaLibSources/redmine-java-api-2.2.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:httpclient-4.2.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/org.apache.httpcomponents/httpclient/jars/httpclient-4.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.ideaLibSources/httpclient-4.2-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:httpcore-4.2.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/org.apache.httpcomponents/httpcore/jars/httpcore-4.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:commons-codec-1.6.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/commons-codec/commons-codec/jars/commons-codec-1.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:slf4j-api-1.7.1.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/org.slf4j/slf4j-api/jars/slf4j-api-1.7.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:fest-assert-1.4.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/org.easytesting/fest-assert/jars/fest-assert-1.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:fest-util-1.1.6.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/org.easytesting/fest-util/jars/fest-util-1.1.6.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:junit-4.10.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/junit/junit/jars/junit-4.10.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:hamcrest-core-1.1.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Grab:slf4j-jdk14-1.7.1.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/org.slf4j/slf4j-jdk14/jars/slf4j-jdk14-1.7.1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

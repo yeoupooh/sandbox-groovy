@@ -1,0 +1,9 @@
+[
+  {
+    "name": "redmine-demo",
+    "uri": "https://yourserver/redmine",
+    "userName": "username",
+    "password": "password",
+    "apiAccessKey": "blahblahblahblahblahblahblahblahblahblah"
+  }
+]
