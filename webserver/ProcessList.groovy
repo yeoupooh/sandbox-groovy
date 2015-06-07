@@ -41,3 +41,16 @@ def findCommand(ps, patternToCompile) {
 	}
 	return found
 }
+
+def findProcess(ps, patternToCompile) {
+	def found = null
+	ps.any { process ->
+		Pattern pattern = Pattern.compile(patternToCompile);
+		Matcher matcher = pattern.matcher(process["cmd"]);
+		if (matcher.find()) {
+			found = process
+			return true // break in any
+		}
+	}
+	return found
+}
