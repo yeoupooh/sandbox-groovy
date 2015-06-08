@@ -2,6 +2,8 @@ import groovy.json.JsonSlurper
 import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
+import org.apache.http.conn.ConnectTimeoutException
+import org.apache.http.conn.HttpHostConnectException
 import org.ccil.cowan.tagsoup.Parser
 
 import java.util.regex.Matcher
@@ -19,6 +21,9 @@ public class IptimeClient {
 
     def configJsons, efmSessionId
 
+    int TENSECONDS = 10 * 1000;
+    int THIRTYSECONDS = 30 * 1000;
+
     def parseEfmSessionId = { text ->
         def cookie = ""
         Matcher m = Pattern.compile(/setCookie\('([a-zA-Z0-9]*)'\)/).matcher(text)
@@ -34,39 +39,54 @@ public class IptimeClient {
         def http = new HTTPBuilder(configJson.baseUrl)
         println "Loading...loginHandler"
         def html;
-        http.request(POST, ContentType.TEXT) {
-            uri.path = '/sess-bin/login_handler.cgi'
-            requestContentType = ContentType.URLENC
-            body = [init_status   : 1,
-                    captcha_on    : 0,
-                    captcha_file  : '',
-                    username      : configJson.userName,
-                    passwd        : configJson.password,
-                    default_passwd: configJson.defaultPassword,
-                    captcha_code  : '']
 
-            response.success = { resp, reader ->
-                //println "reader=" + reader
-                assert reader instanceof Reader
-                //println "POST response status: ${resp.statusLine}"
+        //HTTPBuilder has no direct methods to add timeouts.  We have to add them to the HttpParams of the underlying HttpClient
+        http.getClient().getParams().setParameter("http.connection.timeout", new Integer(TENSECONDS))
+        http.getClient().getParams().setParameter("http.socket.timeout", new Integer(THIRTYSECONDS))
 
-                assert resp.statusLine.statusCode == 200
+        try {
+            http.request(POST, ContentType.TEXT) {
+                uri.path = '/sess-bin/login_handler.cgi'
+                requestContentType = ContentType.URLENC
+                body = [init_status   : 1,
+                        captcha_on    : 0,
+                        captcha_file  : '',
+                        username      : configJson.userName,
+                        passwd        : configJson.password,
+                        default_passwd: configJson.defaultPassword,
+                        captcha_code  : '']
 
-                //println "resp=" + resp
-                html = reader.getText()
-                //println "loginHandlerHtml=" + html
-                //println "resp.contentType=" + resp.contentType
-                //println "resp.data=" + resp.getData()
+                response.success = { resp, reader ->
+                    //println "reader=" + reader
+                    assert reader instanceof Reader
+                    //println "POST response status: ${resp.statusLine}"
 
-                def cookies = []
-                resp.getHeaders('Set-Cookie').each {
-                    //[Set-Cookie: JSESSIONID=E68D4799D4D6282F0348FDB7E8B88AE9; Path=/frontoffice/; HttpOnly]
-                    String cookie = it.value.split(';')[0]
-                    println "Adding efmSessionId to collection: $cookie"
-                    cookies.add(cookie)
+                    assert resp.statusLine.statusCode == 200
+
+                    //println "resp=" + resp
+                    html = reader.getText()
+                    //println "loginHandlerHtml=" + html
+                    //println "resp.contentType=" + resp.contentType
+                    //println "resp.data=" + resp.getData()
+
+                    def cookies = []
+                    resp.getHeaders('Set-Cookie').each {
+                        //[Set-Cookie: JSESSIONID=E68D4799D4D6282F0348FDB7E8B88AE9; Path=/frontoffice/; HttpOnly]
+                        String cookie = it.value.split(';')[0]
+                        println "Adding efmSessionId to collection: $cookie"
+                        cookies.add(cookie)
+                    }
                 }
-            }
-        } // http.request
+
+                response.failure = { resp, reader ->
+                    throw new RuntimeException(reader.text);
+                }
+            } // http.request
+        } catch (HttpHostConnectException e) {
+            throw new RuntimeException(e);
+        } catch (ConnectTimeoutException e) {
+            throw new RuntimeException(e);
+        }
 
         print "Done...loginHandler..."
 
