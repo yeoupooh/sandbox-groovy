@@ -1,3 +1,10 @@
+if (args.length == 0) {
+    URL scriptUrl = getClass().classLoader.resourceLoader
+            .loadGroovySource(getClass().name)
+    println "$scriptUrl <freemind map file>"
+    return
+}
+
 println "Loading...[" + args[0] + "]"
 
 File file = new File(args[0]);

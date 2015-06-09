@@ -9,6 +9,15 @@ def startServer = { config, index ->
     return "OK"
 }
 
+def stopServer = { config, pid ->
+    def cmd = "kill -9 " + pid
+    // Using ".text" will wait until server is down
+    //def res = cmd.execute().text
+
+    cmd.execute()
+    return "OK"
+}
+
 def config = new ServerConfig().load()
 
 def thisScript = "/runmc.groovy"
@@ -25,6 +34,11 @@ def cmd = request.getParameter("cmd")
 
 if (cmd == "start") {
     startServer(config, request.getParameter("index").toInteger())
+    redirect(thisScript)
+}
+
+if (cmd == "stop") {
+    stopServer(config, request.getParameter("pid").toInteger())
     redirect(thisScript)
 }
 
@@ -104,13 +118,20 @@ html.html {
                                 } // tr
                             } // thead
                             config.serverPaths.eachWithIndex { server, i ->
-                                def status = pl.findCommand(ps, server.server)
+                                def process = pl.findProcess(ps, server.server)
+//                                def status = pl.findCommand(ps, server.server)
+                                def status = (process == null) ? false : true
                                 tr {
                                     td {
                                         if (session.admin == true) {
+                                            def pid = (process != null) ? process.get("pid") : -1
                                             button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=start&index=" + i + "'", "Start")
+                                            // TODO Stop can be handled when which java process is launched
+//                                            button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=stop&pid=" + pid + "'", "Stop")
                                         } else {
                                             button(class: "button btn btn-disabled", "Start")
+                                            // TODO
+//                                            button(class: "button btn btn-disabled", "Stop")
                                         }
                                     } // td
                                     td {
