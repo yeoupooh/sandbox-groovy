@@ -49,12 +49,19 @@ def wakeUp = {
 }
 
 def getWolList = {
-    def wolList = ic.getWolList(configJsons[cmb.selectedIndex]);
+    try {
+        def wolList = ic.getWolList(configJsons[cmb.selectedIndex]);
 
-    println wolList
-    wolModel.clear()
-    wolList.each { wol ->
-        wolModel.addElement(wol)
+        println wolList
+        wolModel.clear()
+        wolList.each { wol ->
+            wolModel.addElement(wol)
+        }
+    } catch (RuntimeException e) {
+        swing.optionPane().showMessageDialog(null,
+                e.getMessage(),
+                "Wakeup On LAN",
+                JOptionPane.ERROR_MESSAGE)
     }
 }
 

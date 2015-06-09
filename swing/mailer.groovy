@@ -11,7 +11,7 @@ def swing = new SwingBuilder()
 JTree mboxTree
 swing.frame(title: 'Mailer', defaultCloseOperation: JFrame.DISPOSE_ON_CLOSE,
         size: [800, 600], show: true, locationRelativeTo: null) {
-    lookAndFeel("system")
+    lookAndFeel("nimbus")
     menuBar() {
         menu(text: "File", mnemonic: 'F') {
             menuItem(text: "Exit", mnemonic: 'X', actionPerformed: { dispose() })
