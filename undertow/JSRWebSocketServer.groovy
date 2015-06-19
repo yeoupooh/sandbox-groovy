@@ -1,17 +1,18 @@
-import io.undertow.*
-import io.undertow.server.*
-import io.undertow.server.handlers.*
-import io.undertow.server.handlers.resource.*
-import io.undertow.servlet.api.*
-import io.undertow.servlet.spec.*
-import io.undertow.util.*
-import io.undertow.websockets.jsr.*
-import org.xnio.*
+import io.undertow.Handlers
+import io.undertow.Undertow
+import io.undertow.server.handlers.PathHandler
+import io.undertow.server.handlers.resource.ClassPathResourceManager
+import io.undertow.servlet.api.DeploymentInfo
+import io.undertow.servlet.api.DeploymentManager
+import io.undertow.servlet.api.ServletContainer
+import io.undertow.websockets.jsr.WebSocketDeploymentInfo
+import org.xnio.ByteBufferSlicePool
 
-import javax.servlet.*
+import javax.servlet.ServletException
 
 @Grapes([
-        @Grab(group = 'org.jboss.logging', module = 'jboss-logging', version = '3.2.1.Final'),
+        // NOTE: To fix 'download fail' error, copying required files to be under '~/.m2/' folder.
+        @Grab(group = 'org.jboss.logging', module = 'jboss-logging', version = '3.1.4.GA'),
         @Grab(group = 'org.jboss.spec.javax.servlet', module = 'jboss-servlet-api_3.1_spec', version = '1.0.0.Final'),
         @Grab(group = 'org.jboss.logging', module = 'jboss-logging-processor', version = '1.2.0.Final'),
         @Grab(group = 'org.jboss.xnio', module = 'xnio-api', version = '3.3.1.Final'),
@@ -49,7 +50,8 @@ public class JSRWebSocketServer {
                 .setDeploymentName("chat.war");
 
         DeploymentManager manager = container.addDeployment(builder);
-        // FIXME Error here "java.lang.NoSuchMethodError: javax.servlet.ServletContext.getClassLoader()Ljava/lang/ClassLoader;"
+        // NOTE: To fix error "java.lang.NoSuchMethodError: javax.servlet.ServletContext.getClassLoader()Ljava/lang/ClassLoader;",
+        // Rmove servlet-api-2.4.jar from groovy lib folder. Because Undertow uses servlet api 3.x.
         println javax.servlet.ServletContext.getClassLoader()
         manager.deploy();
         try {
