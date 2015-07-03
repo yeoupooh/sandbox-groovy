@@ -1,12 +1,16 @@
 {
   "basePath": "/your-servers-root",
+  "auth": {
+    "username": "admin",
+    "password": "admin",
+  },
   "serverPaths": [
     {
-	  "name": "server name",
-	  "port": 25565,
-	  "minecraftVersion": "1.8.4",
-	  "requiredMods": [],
-	  "requiredResourcePacks": [],
+      "name": "server name",
+      "port": 25565,
+      "minecraftVersion": "1.8.4",
+      "requiredMods": [],
+      "requiredResourcePacks": [],
       "script": "/your-script.sh",
       "server": "/your-server"
     }

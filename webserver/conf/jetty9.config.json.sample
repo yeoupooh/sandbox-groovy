@@ -1,0 +1,11 @@
+{
+  "http": {
+    "port": 9999
+  },
+  "ssl": {
+    "keyStorePath": "/keystore.jks",
+    "keyStorePassword": "secret",
+    "keyManagerPassword": "secret",
+    "port": 9998
+  }
+}

@@ -12,9 +12,10 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 @Grapes([
+        @Grab(group = 'javax.servlet', module = 'javax.servlet-api', version = '3.0.1'),
         @Grab(group = 'org.eclipse.jetty.aggregate', module = 'jetty-server', version = '8.1.7.v20120910'),
-        @Grab(group = 'org.eclipse.jetty.aggregate', module = 'jetty-servlet', version = '8.1.7.v20120910'),
-        @Grab(group = 'javax.servlet', module = 'javax.servlet-api', version = '3.0.1')])
+        @Grab(group = 'org.eclipse.jetty.aggregate', module = 'jetty-servlet', version = '8.1.7.v20120910')
+])
 
 class HelloHandler extends AbstractHandler {
     public String greeting
