@@ -24,8 +24,8 @@ def http = new HTTPBuilder(host)
 
 def keyStore = KeyStore.getInstance(KeyStore.defaultType)
 
-getClass().getResource("./truststore.jks").withInputStream {
-    keyStore.load(it, "password".toCharArray())
+getClass().getResource(config.keystoreResource).withInputStream {
+    keyStore.load(it, config.keystorePassword.toCharArray())
 }
 
 final socketFactory = new SSLSocketFactory(keyStore)
