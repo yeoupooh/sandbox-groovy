@@ -1,3 +1,4 @@
+import groovy.json.JsonSlurper
 import org.eclipse.jetty.websocket.api.Session
 import org.eclipse.jetty.websocket.client.WebSocketClient
 
@@ -14,7 +15,9 @@ import java.util.concurrent.Future
 
 // https://github.com/jetty-project/embedded-jetty-websocket-examples/blob/master/native-jetty-websocket-example/src/main/java/org/eclipse/jetty/demo/EventClient.java
 
-URI uri = URI.create("ws://localhost:8080/events/");
+def config = new JsonSlurper().parseText(new File("./event.config.json").text)
+
+URI uri = URI.create(config.url);
 
 WebSocketClient client = new WebSocketClient();
 try {
@@ -27,7 +30,7 @@ try {
         // Wait for Connect
         Session session = fut.get();
         // Send a message
-        session.getRemote().sendString("Hello");
+        session.getRemote().sendString(config.message);
         // Close session
         session.close();
     }
