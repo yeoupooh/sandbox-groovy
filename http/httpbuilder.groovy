@@ -1,9 +1,9 @@
-import groovyx.net.http.*
+import groovyx.net.http.ContentType
+import groovyx.net.http.HTTPBuilder
 
-import static groovyx.net.http.ContentType.*
-import static groovyx.net.http.Method.*
+import static groovyx.net.http.Method.POST
 
-@Grab(group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.6')
+@Grab(group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.7.1')
 
 def testMirrorRest = {
 
@@ -18,7 +18,7 @@ def testMirrorRest = {
 
             assert resp.statusLine.statusCode == 201
 
-            println html.text
+            println "html=[$html.text]"
 
         }
     }
