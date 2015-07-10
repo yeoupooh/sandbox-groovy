@@ -137,7 +137,13 @@ html.html {
                                     td {
                                         span(class: status == true ? "btn btn-success" : "btn btn-danger", status == true ? "Running" : "Stopped")
                                     }
-                                    td { yield "$server.name" }
+                                    td {
+                                        if (server.homepage != null) {
+                                            a(href: "$server.homepage", "$server.name", target: "_blank")
+                                        } else {
+                                            yield "$server.name"
+                                        }
+                                    }
                                     td { yield "$server.port" }
                                     td { yield "$server.description" }
                                     td { yield "$server.minecraftVersion" }
