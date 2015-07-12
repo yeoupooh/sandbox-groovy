@@ -118,57 +118,60 @@ html.html {
                                 } // tr
                             } // thead
                             config.serverPaths.eachWithIndex { server, i ->
-                                def process = pl.findProcess(ps, server.server)
+                                if (server.disabled == null || server.disabled == false) {
+
+                                    def process = pl.findProcess(ps, server.server)
 //                                def status = pl.findCommand(ps, server.server)
-                                def status = (process == null) ? false : true
-                                tr {
-                                    td {
-                                        if (session.admin == true) {
-                                            def pid = (process != null) ? process.get("pid") : -1
-                                            button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=start&index=" + i + "'", "Start")
-                                            // TODO Stop can be handled when which java process is launched
+                                    def status = (process == null) ? false : true
+                                    tr {
+                                        td {
+                                            if (session.admin == true) {
+                                                def pid = (process != null) ? process.get("pid") : -1
+                                                button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=start&index=" + i + "'", "Start")
+                                                // TODO Stop can be handled when which java process is launched
 //                                            button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=stop&pid=" + pid + "'", "Stop")
-                                        } else {
-                                            button(class: "button btn btn-disabled", "Start")
-                                            // TODO
+                                            } else {
+                                                button(class: "button btn btn-disabled", "Start")
+                                                // TODO
 //                                            button(class: "button btn btn-disabled", "Stop")
+                                            }
+                                        } // td
+                                        td {
+                                            span(class: status == true ? "btn btn-success" : "btn btn-danger", status == true ? "Running" : "Stopped")
                                         }
-                                    } // td
-                                    td {
-                                        span(class: status == true ? "btn btn-success" : "btn btn-danger", status == true ? "Running" : "Stopped")
-                                    }
-                                    td {
-                                        if (server.homepage != null) {
-                                            a(href: "$server.homepage", "$server.name", target: "_blank")
-                                        } else {
-                                            yield "$server.name"
+                                        td {
+                                            if (server.homepage != null) {
+                                                a(href: "$server.homepage", "$server.name", target: "_blank")
+                                            } else {
+                                                yield "$server.name"
+                                            }
                                         }
-                                    }
-                                    td { yield "$server.port" }
-                                    td { yield "$server.description" }
-                                    td { yield "$server.minecraftVersion" }
-                                    td {
-                                        try {
-                                            File dir = new File(config.basePath.toString() + server.server.toString() + "/mods")
-                                            dir.eachFile(FileType.FILES) { file ->
+                                        td { yield "$server.port" }
+                                        td { yield "$server.description" }
+                                        td { yield "$server.minecraftVersion" }
+                                        td {
+                                            try {
+                                                File dir = new File(config.basePath.toString() + server.server.toString() + "/mods")
+                                                dir.eachFile(FileType.FILES) { file ->
+                                                    p {
+                                                        a(class: "glyphicon glyphicon-download", href: config.download.baseUrl + file.getName(), file.getName())
+                                                    }
+                                                }
+                                            } catch (FileNotFoundException) {
+                                                // ignore this error
+                                            }
+                                        } // td
+                                        td {
+                                            server.requiredResourcePacks.each { rp ->
                                                 p {
-                                                    a(class: "glyphicon glyphicon-download", href: config.download.baseUrl + file.getName(), file.getName())
+                                                    a(class: "glyphicon glyphicon-download", href: config.download.baseUrl + rp.name, rp.name)
+                                                    br {}
+                                                    a(class: "glyphicon glyphicon-new-window", href: rp.url, target: "_blank", "Source")
                                                 }
                                             }
-                                        } catch (FileNotFoundException) {
-                                            // ignore this error
-                                        }
-                                    } // td
-                                    td {
-                                        server.requiredResourcePacks.each { rp ->
-                                            p {
-                                                a(class: "glyphicon glyphicon-download", href: config.download.baseUrl + rp.name, rp.name)
-                                                br {}
-                                                a(class: "glyphicon glyphicon-new-window", href: rp.url, target: "_blank", "Source")
-                                            }
-                                        }
-                                    } // td
-                                } // tr
+                                        } // td
+                                    } // tr
+                                }// if
                             } // each
                         } // table
                     }// div panel
