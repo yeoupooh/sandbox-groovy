@@ -1,16 +1,30 @@
 import groovy.io.FileType
 
+ProcessList pl = new ProcessList()
+def ps = pl.getCurrent()
+
+def log = { msg ->
+    System.out.println msg
+}
+
 def startServer = { config, index ->
     def cmd = config.basePath + config.serverPaths[index].script + " " + config.basePath + config.serverPaths[index].server
     // Using ".text" will wait until server is down
     //def res = cmd.execute().text
 
+    log "startServer: cmd=[$cmd]"
     cmd.execute()
     return "OK"
 }
 
 def stopServer = { config, pid ->
+    log "stopServer: pid=[$pid]"
     def cmd = "kill -9 " + pid
+    def childProcess = pl.findChildProcess(ps, pid);
+    if (childProcess != null) {
+        cmd = cmd + " " + childProcess.pid
+        log "stopServer: chil process pid=[$childProcess.pid]"
+    }
     // Using ".text" will wait until server is down
     //def res = cmd.execute().text
 
@@ -55,9 +69,6 @@ if (cmd == "logout") {
     session.admin = null
     redirect(thisScript)
 }
-
-ProcessList pl = new ProcessList()
-def ps = pl.getCurrent()
 
 html.html {
     head {
@@ -128,12 +139,10 @@ html.html {
                                             if (session.admin == true) {
                                                 def pid = (process != null) ? process.get("pid") : -1
                                                 button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=start&index=" + i + "'", "Start")
-                                                // TODO Stop can be handled when which java process is launched
-//                                            button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=stop&pid=" + pid + "'", "Stop")
+                                                button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=stop&pid=" + pid + "'", "Stop")
                                             } else {
                                                 button(class: "button btn btn-disabled", "Start")
-                                                // TODO
-//                                            button(class: "button btn btn-disabled", "Stop")
+                                                button(class: "button btn btn-disabled", "Stop")
                                             }
                                         } // td
                                         td {
