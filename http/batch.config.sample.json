@@ -1,0 +1,11 @@
+{
+  "posts": [
+    {
+      "method": "get",
+      "url": "http://www.naver.com",
+      "path": "/",
+      "query": {},
+      "useCookie": true
+    }
+  ]
+}
