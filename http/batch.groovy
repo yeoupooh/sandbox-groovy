@@ -1,12 +1,12 @@
 import groovy.json.JsonSlurper
 import groovy.util.logging.Slf4j
+import groovyx.net.http.ContentType
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
-import groovyx.net.http.ContentType
 
 @Grapes([
         @Grab(group = 'ch.qos.logback', module = 'logback-classic', version = '1.1.3'),
-        @Grab(group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.7.2')
+        @Grab(group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.7.1')
 ])
 
 @Slf4j
@@ -20,6 +20,9 @@ class HttpHelper {
                 break
             case "text":
                 contentType = ContentType.TEXT
+                break
+            case "binary":
+                contentType = ContentType.BINARY
                 break
             default:
                 log.error("No content type defined")
@@ -43,6 +46,19 @@ class HttpHelper {
                 if (contentType == ContentType.URLENC) {
                     ret = reader
                     log.debug("ret=[$ret]")
+                } else if (contentType == ContentType.BINARY) {
+                    File file = new File(options.response.filename)
+                    if (file.parentFile.exists() == false) {
+                        file.parentFile.mkdirs()
+                    }
+                    def fos = new FileOutputStream(file)
+                    int readBytes
+                    byte[] buf = new byte[1024 * 8]
+                    while ((readBytes = reader.read(buf, 0, buf.length)) != -1) {
+                        log.debug("readBytes=[$readBytes]")
+                        fos.write(buf, 0, readBytes)
+                    }
+                    fos.close()
                 } else {
                     ret = reader.text
                 }
@@ -63,8 +79,8 @@ class HttpHelper {
 
             } // response.success
 
-            response.failure = { resp, reader ->
-                log.error("failed $reader.text")
+            response.failure = { resp ->
+                log.error("failed")
             }
 
         } // http.request
@@ -76,7 +92,8 @@ class HttpHelper {
 @Slf4j
 class BatchHttpClient {
     static void main(String[] args) {
-        def config = new JsonSlurper().parseText(new File("batch.config.json").text);
+        def configRoot = new JsonSlurper().parseText(new File("batch.config.json").text);
+        def config = configRoot.groups[configRoot.selected]
         log.debug("requests=[$config.requests]")
 
         def cookies = []
