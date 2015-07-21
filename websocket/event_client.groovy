@@ -29,8 +29,14 @@ try {
         Future<Session> fut = client.connect(socket, uri);
         // Wait for Connect
         Session session = fut.get();
+
         // Send a message
         session.getRemote().sendString(config.message);
+
+        while (true) {
+            println("Sleeping...")
+            sleep(1000);
+        }
         // Close session
         session.close();
     }
