@@ -1,8 +1,11 @@
-import groovyx.net.http.ContentType
+import groovy.util.logging.Slf4j
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.Method
+import groovyx.net.http.*
 import org.apache.http.conn.scheme.Scheme
 import org.apache.http.conn.ssl.SSLSocketFactory
+import org.apache.http.entity.mime.MultipartEntity
+import org.apache.http.entity.mime.content.InputStreamBody
 
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
@@ -14,24 +17,21 @@ import java.security.cert.X509Certificate
 import static groovyx.net.http.Method.HEAD
 
 @Grapes([
+        @Grab(group = 'ch.qos.logback', module = 'logback-classic', version = '1.1.3'),
         @Grab(group = 'org.codehaus.groovy.modules.http-builder', module = 'http-builder', version = '0.7.1'),
-        @Grab(group = 'org.apache.httpcomponents', module = 'httpclient', version = '4.5')
+//        @Grab(group = 'org.apache.httpcomponents', module = 'httpmime', version = '4.5'),
+        @Grab(group = 'org.apache.httpcomponents', module = 'httpmime', version = '4.2.1'),
+        @Grab(group = 'org.apache.httpcomponents', module = 'httpclient', version = '4.2.1')
+//        @Grab(group = 'org.apache.httpcomponents', module = 'httpclient', version = '4.5'),
 ])
 
 /**
  *
  */
+@Slf4j
 public class HttpClientHelper {
 
-/**
- *
- * @param url
- * @return
- */
-    public static String getUrl(url) {
-        println "url=" + url
-        def http = new HTTPBuilder(url)
-
+    static void acceptAllCerts(HTTPBuilder http) {
 // https://github.com/jgritman/httpbuilder/blob/master/src/test/groovy/groovyx/net/http/SSLTest.groovy
 // http://humbleprogrammer.wikidot.com/groovy-ssl
 // http://stackoverflow.com/questions/11638005/is-there-an-easier-way-to-tell-httpbuilder-to-ignore-an-invalid-cert
@@ -89,6 +89,20 @@ public class HttpClientHelper {
 
 // HTTP Request
         println "HEAD:" + HEAD.toString()
+    }
+
+/**
+ *
+ * @param url
+ * @return
+ */
+    public static String getUrl(url) {
+        println "url=" + url
+        def http = new HTTPBuilder(url)
+
+        // Pass SSL
+        acceptAllCerts(http)
+
         def result
         def status = http.request(Method.GET, ContentType.TEXT) {
             response.success = { resp, reader ->
@@ -103,4 +117,38 @@ public class HttpClientHelper {
         return result
     }
 
+    static String post(url, Object[] body) {
+        log.debug("body=[$body]")
+        MultipartEntity entity = new MultipartEntity()
+        body.each { it ->
+            log.debug(it)
+            if (it instanceof String) {
+                entity.addPart(it.split("=")[0], it.split("=")[1])
+            } else if (it instanceof File) {
+                File file = (File) it
+                entity.addPart("file", new InputStreamBody(file.inputStream,
+                        file.contentType, file.originalFilename))
+            }
+        }
+        log.debug("entity=[$entity]")
+
+        def http = new HTTPBuilder(url)
+
+        // Pass SSL
+        acceptAllCerts(http)
+
+        def result
+        def status = http.request(Method.POST, ContentType.TEXT) {
+            response.success = { resp, reader ->
+                println "response status: ${resp.statusLine}"
+                result = new String(reader.text)
+            }
+            response.failure = {
+                println "statusCode:$it.statusLine.statusCode"
+            }
+        }
+
+        return result
+
+    }
 }

@@ -5,10 +5,15 @@ import org.eclipse.jetty.websocket.api.annotations.*
         @Grab(group = 'javax.servlet', module = 'javax.servlet-api', version = '3.0.1'),
         @Grab(group = 'org.eclipse.jetty', module = 'jetty-server', version = '9.2.11.v20150529'),
         @Grab(group = 'org.eclipse.jetty', module = 'jetty-servlet', version = '9.2.11.v20150529'),
+        @Grab(group = 'org.eclipse.jetty.websocket', module = 'websocket-common', version = '9.2.11.v20150529'),
+        @Grab(group = 'org.eclipse.jetty.websocket', module = 'websocket-client', version = '9.2.11.v20150529'),
+        @Grab(group = 'org.eclipse.jetty.websocket', module = 'websocket-server', version = '9.2.11.v20150529'),
 ])
 
 @WebSocket
 public class EventSocket {
+
+    IMessageListener listener
 
     @OnWebSocketConnect
     public void onWebSocketConnect(Session sess) {
@@ -18,6 +23,9 @@ public class EventSocket {
     @OnWebSocketMessage
     public void onWebSocketText(String message) {
         System.out.println("Received TEXT message: " + message);
+        if (listener != null) {
+            listener.onMessage(message)
+        }
     }
 
     @OnWebSocketClose
