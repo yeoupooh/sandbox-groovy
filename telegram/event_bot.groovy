@@ -59,7 +59,8 @@ class EventBot {
         notifyToChats("Starting bot...")
 
         WebSocketClient client = new WebSocketClient();
-        try {
+        while (true) {
+
             try {
                 client.start();
                 // The socket that receives events
@@ -82,13 +83,17 @@ class EventBot {
                 // Close session
                 session.close();
             }
+            catch (java.util.concurrent.ExecutionException e) {
+                notifyToChats("Error in websocket: $e.message")
+            }
+            catch (Throwable t) {
+                t.printStackTrace(System.err);
+            }
             finally {
                 client.stop();
             }
-        }
-        catch (Throwable t) {
-            t.printStackTrace(System.err);
-        }
+
+        } // while
     }
 
     static void main(String[] args) {
