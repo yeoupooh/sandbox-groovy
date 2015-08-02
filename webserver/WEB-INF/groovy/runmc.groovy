@@ -8,7 +8,7 @@ def log = { msg ->
 }
 
 def startServer = { config, index ->
-    def cmd = config.basePath + config.serverPaths[index].script + " " + config.basePath + config.serverPaths[index].server
+    def cmd = config.basePath + config.serverPaths[index].script + " " + config.basePath + config.serverPaths[index].server + " " + config.serverPaths[index].minecraftVersion
     // Using ".text" will wait until server is down
     //def res = cmd.execute().text
 
@@ -157,7 +157,12 @@ html.html {
                                         }
                                         td { yield "$server.port" }
                                         td { yield "$server.description" }
-                                        td { yield "$server.minecraftVersion" }
+                                        td {
+                                            if (server.useForge != null && server.useForge == true) {
+                                                span(class: "label label-info", "Forge")
+                                            }
+                                            yield "$server.minecraftVersion"
+                                        }
                                         td {
                                             try {
                                                 File dir = new File(config.basePath.toString() + server.server.toString() + "/mods")
