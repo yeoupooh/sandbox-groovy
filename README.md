@@ -40,7 +40,6 @@
 
 java -jar minecraft_server.jar $1
 ```
-* 
 
 ### Run
 
