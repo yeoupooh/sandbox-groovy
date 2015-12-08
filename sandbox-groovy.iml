@@ -8,5 +8,16 @@
     <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="groovy-2.4.3" level="application" />
+    <orderEntry type="module-library">
+      <library name="Grab:jaudiotagger-2.0.3.jar">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.groovy/grapes/org/jaudiotagger/jars/jaudiotagger-2.0.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.ideaLibSources/jaudiotagger-2.0.3-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
