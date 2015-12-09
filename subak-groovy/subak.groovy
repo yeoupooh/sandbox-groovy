@@ -67,7 +67,9 @@ def saveToXspf(model) {
     f.text = writer.toString()
 }
 
-def loadTracks(resultTableModel, model) {
+def loadTracks(resultTableModel, model, keyword, msg) {
+    msg.text = 'Loading...'
+    model.clear()
     new Thread({
         def result = cmbModel.selectedItem.search(keyword)
         println(result)
@@ -87,9 +89,16 @@ def loadTracks(resultTableModel, model) {
     }).start()
 }
 
+class MsgModel {
+    @Bindable
+    String text
+}
+
 def createResultTable(keyword) {
     return swing.vbox {
         def model = []
+        def resultTableModel
+        def msg = new MsgModel()
 
         hbox {
             button('Close', actionPerformed: {
@@ -99,16 +108,16 @@ def createResultTable(keyword) {
             })
             button('Refresh', actionPerformed: {
                 println('refresh')
-                loadTracks(resultTableModel, model)
+                loadTracks(resultTableModel, model, keyword, msg)
             })
             button('Save to .xspf', actionPerformed: {
                 saveToXspf(model)
             })
-            msg = label('Loading...')
+            label(text: swing.bind(source: msg, sourceProperty: 'text'))
         }
         scrollPane {
             table {
-                def resultTableModel = tableModel(list: model) {
+                resultTableModel = tableModel(list: model) {
                     closureColumn(header: 'File', read: { row -> return row.file })
                     closureColumn(header: 'Track', read: { row -> return row.track })
                     closureColumn(header: 'Artist', read: { row -> return row.artist })
@@ -117,7 +126,7 @@ def createResultTable(keyword) {
                     closureColumn(header: 'Bit Rate', read: { row -> return row.bitrate })
                 }
 
-                loadTracks(resultTableModel, model)
+                loadTracks(resultTableModel, model, keyword, msg)
             }
         }
     }
