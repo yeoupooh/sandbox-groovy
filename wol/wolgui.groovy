@@ -79,8 +79,8 @@ swing.frame(title: 'Wake On Lan', size: [600, 300], defaultCloseOperation: JFram
         t = table(rowHeight: 30) {
             tm = tableModel(list: model) {
                 closureColumn(header: 'Name', read: { row -> return row.name })
-                closureColumn(header: 'IP Address', read: { row -> return row.ip })
-                closureColumn(header: 'Mac Address', read: { row -> return row.mac })
+                closureColumn(header: 'Type', read: { row -> return row.type })
+                closureColumn(header: 'Options', read: { row -> return row.options })
                 propertyColumn(
                         header: "Action",
                         propertyName: 'action',
@@ -102,8 +102,8 @@ swing.frame(title: 'Wake On Lan', size: [600, 300], defaultCloseOperation: JFram
 }.setVisible(true)
 
 def wakeUp(host) {
-    new GroovyShell().parse(new File('wol.groovy')).with { wol ->
-        wol.wakeUp(host.ip, host.mac)
+    new GroovyShell().parse(new File("wol_" + host.type + ".groovy")).with { wol ->
+        wol.wakeUp(host.options)
     }
 }
 

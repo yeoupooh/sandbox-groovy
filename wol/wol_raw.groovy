@@ -12,7 +12,9 @@ String macStr = args[1];
 
 wakeUp(ipStr, macStr)
 
-def wakeUp(ipStr, macStr) {
+def wakeUp(options) {
+    def ipStr = options.ip
+    def macStr = options.mac
     int PORT = 9
     byte[] macBytes = getMacBytes(macStr);
     byte[] bytes = new byte[6 + 16 * macBytes.length];
