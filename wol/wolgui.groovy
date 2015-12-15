@@ -13,7 +13,7 @@ swing.edt {
     lookAndFeel 'nimbus'
 }
 
-def model = []
+model = []
 
 class ButtonRenderer extends JButton implements TableCellRenderer {
     @Override
@@ -74,31 +74,39 @@ interface ITableCellClickListener {
     void onClick(int row, int col)
 }
 
-swing.frame(title: 'Wake On Lan', size: [600, 300], defaultCloseOperation: JFrame.EXIT_ON_CLOSE) {
-    scrollPane {
-        t = table(rowHeight: 30) {
-            tm = tableModel(list: model) {
-                closureColumn(header: 'Name', read: { row -> return row.name })
-                closureColumn(header: 'Type', read: { row -> return row.type })
-                closureColumn(header: 'Options', read: { row -> return row.options })
-                propertyColumn(
-                        header: "Action",
-                        propertyName: 'action',
-                        cellRenderer: new ButtonRenderer(),
-                        cellEditor: new ButtonEditor(new ITableCellClickListener() {
-                            @Override
-                            void onClick(int row, int col) {
-                                wakeUp(model[row])
-                                JOptionPane.showMessageDialog(t, 'WOL Packet Sent!')
-                            }
-                        })
+swing.frame(title: 'Wake On Lan', size: [600, 300], location: [200, 200], defaultCloseOperation: JFrame.EXIT_ON_CLOSE) {
+    vbox {
 
-                )
+        hbox {
+            button('Refresh', actionPerformed: {
+                loadHosts()
+            })
+        }
+        scrollPane {
+            t = table(rowHeight: 30) {
+                tm = tableModel(list: model) {
+                    closureColumn(header: 'Name', read: { row -> return row.name })
+                    closureColumn(header: 'Type', read: { row -> return row.type }, maxWidth: 100)
+                    closureColumn(header: 'Options', read: { row -> return row.options })
+                    propertyColumn(
+                            header: "Action",
+                            propertyName: 'action',
+                            maxWidth: 200,
+                            cellRenderer: new ButtonRenderer(),
+                            cellEditor: new ButtonEditor(new ITableCellClickListener() {
+                                @Override
+                                void onClick(int row, int col) {
+                                    wakeUp(model[row])
+                                    JOptionPane.showMessageDialog(t, 'WOL Packet Sent!')
+                                }
+                            })
+
+                    )
+                }
+
             }
-
         }
     }
-
 }.setVisible(true)
 
 def wakeUp(host) {
@@ -107,16 +115,21 @@ def wakeUp(host) {
     }
 }
 
-new Thread({
-    def config = new JsonSlurper().parse(new File("wol.config.json"))
-    println config
-    config.hosts.each { host ->
-        model.add(host)
-    }
-    SwingUtilities.invokeLater(new Runnable() {
-        @Override
-        void run() {
-            tm.fireTableDataChanged()
+def loadHosts() {
+    new Thread({
+        def config = new JsonSlurper().parse(new File("wol.config.json"))
+        println config
+        model.clear()
+        config.hosts.each { host ->
+            model.add(host)
         }
-    })
-}).start()
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            void run() {
+                tm.fireTableDataChanged()
+            }
+        })
+    }).start()
+}
+
+loadHosts()
