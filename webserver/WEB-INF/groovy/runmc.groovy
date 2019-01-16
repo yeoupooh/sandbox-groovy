@@ -7,6 +7,35 @@ def log = { msg ->
     System.out.println msg
 }
 
+def post(String url, String postContent) {
+    def connection = url.toURL().openConnection()
+    connection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded")
+    connection.setRequestMethod("POST")
+    connection.doOutput = true
+    connection.outputStream.withWriter{
+        it.write(postContent)
+        it.flush()
+    }
+    connection.connect()
+
+    try {
+        connection.content.text
+    } catch (IOException e) {
+        try {
+            ((HttpURLConnection)connection).errorStream.text
+        } catch (Exception ignored) {
+            throw e
+        }
+    }
+}
+
+def send_message_to_slack = { config, message ->
+    String url = config.slack.webHookUrl
+    String body = "payload={\"channel\": \"$config.slack.channel\", \"username\": \"$config.slack.username\", \"icon_emoji\": \"$config.slack.iconEmoji\", \"text\": \"$message\"}"
+    log "send message to slack: $url, $body"
+    post(url, body)
+}
+
 def startServer = { config, index ->
     def cmd = config.basePath + config.serverPaths[index].script + " " + config.basePath + config.serverPaths[index].server + " " + config.serverPaths[index].minecraftVersion
     // Using ".text" will wait until server is down
@@ -14,10 +43,11 @@ def startServer = { config, index ->
 
     log "startServer: cmd=[$cmd]"
     cmd.execute()
+    send_message_to_slack(config, "server started: " + config.serverPaths[index].name + " (" + config.serverPaths[index].port + ")")
     return "OK"
 }
 
-def stopServer = { config, pid ->
+def stopServer = { config, index, pid ->
     log "stopServer: pid=[$pid]"
     def cmd = "kill -9 " + pid
     def childProcess = pl.findChildProcess(ps, pid);
@@ -29,6 +59,7 @@ def stopServer = { config, pid ->
     //def res = cmd.execute().text
 
     cmd.execute()
+    send_message_to_slack(config, "server stopped: " + config.serverPaths[index].name + " (" + config.serverPaths[index].port + ")")
     return "OK"
 }
 
@@ -52,7 +83,7 @@ if (cmd == "start") {
 }
 
 if (cmd == "stop") {
-    stopServer(config, request.getParameter("pid").toInteger())
+    stopServer(config, request.getParameter("index").toInteger(), request.getParameter("pid").toInteger())
     redirect(thisScript)
 }
 
@@ -61,6 +92,7 @@ if (cmd == "login") {
             && request.getParameter("password") == config.auth.password) {
         session.admin = true
         session.username = config.auth.username
+        send_message_to_slack(config, 'user logged in')
     }
     redirect(thisScript)
 }
@@ -68,6 +100,7 @@ if (cmd == "login") {
 if (cmd == "logout") {
     session.admin = null
     redirect(thisScript)
+    send_message_to_slack(config, 'user logged out.')
 }
 
 html.html {
@@ -139,7 +172,7 @@ html.html {
                                             if (session.admin == true) {
                                                 def pid = (process != null) ? process.get("pid") : -1
                                                 button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=start&index=" + i + "'", "Start")
-                                                button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=stop&pid=" + pid + "'", "Stop")
+                                                button(class: "button btn btn-primary", onclick: "location.href='" + thisScript + "?cmd=stop&index=" + i + "&pid=" + pid + "'", "Stop")
                                             } else {
                                                 button(class: "button btn btn-disabled", "Start")
                                                 button(class: "button btn btn-disabled", "Stop")
